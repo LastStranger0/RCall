@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="room_field">Введите код комнаты</string>
+    <string name="room_connect">Подключиться</string>
+    <string name="room_field_error">Введите код комнаты</string>
+</resources>
