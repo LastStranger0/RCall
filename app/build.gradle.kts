@@ -42,6 +42,7 @@ android {
         buildConfigField("String", "TURN_USER", "\"${localProperties.getProperty("app.turn_user", "")}\"")
         buildConfigField("String", "TURN_PASS", "\"${localProperties.getProperty("app.turn_pass", "")}\"")
         buildConfigField("String", "TURN_REALM", "\"${localProperties.getProperty("app.turn_realm", "")}\"")
+        buildConfigField("String", "KEYCHAIN_PASSWORD", "\"${localProperties.getProperty("app.keychain_password", "")}\"")
     }
 
 

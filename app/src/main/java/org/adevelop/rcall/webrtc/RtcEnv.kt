@@ -9,10 +9,6 @@ import org.webrtc.Logging
 import org.webrtc.PeerConnectionFactory
 import org.webrtc.audio.JavaAudioDeviceModule
 
-/**
- * Глобальный синглтон для хранения и управления ресурсами WebRTC.
- * Инициализируется один раз при старте приложения.
- */
 object RtcEnv {
     private lateinit var eglBase: EglBase
     val eglCtx: EglBase.Context get() = eglBase.eglBaseContext
@@ -23,10 +19,6 @@ object RtcEnv {
     private var initialized = false
     private val lock = Any()
 
-    /**
-     * Инициализирует все глобальные ресурсы WebRTC. Потокобезопасен.
-     * @param app Контекст приложения.
-     */
     fun init(app: Application) {
         synchronized(lock) {
             if (initialized) {
@@ -54,8 +46,8 @@ object RtcEnv {
 
             val videoEncoderFactory = DefaultVideoEncoderFactory(
                 eglCtx,
-                false, /* enableIntelVp8Encoder */
-                false  /* enableH264HighProfile */
+                false,
+                false
             )
             val videoDecoderFactory = DefaultVideoDecoderFactory(eglCtx)
 
@@ -78,9 +70,6 @@ object RtcEnv {
         }
     }
 
-    /**
-     * Освобождает все глобальные ресурсы WebRTC.
-     */
     fun release() {
         synchronized(lock) {
             if (!initialized) {

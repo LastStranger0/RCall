@@ -17,12 +17,12 @@ import okhttp3.WebSocketListener
 import org.webrtc.IceCandidate
 import org.webrtc.SessionDescription
 import java.util.UUID
-import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicBoolean
 
 class SignalingClient(
     private val baseWs: String,
     parentScope: CoroutineScope,
+    private val httpClient: OkHttpClient,
     private val listener: Listener
 ) {
     interface Listener {
@@ -36,11 +36,6 @@ class SignalingClient(
 
     private val scope = CoroutineScope(parentScope.coroutineContext + SupervisorJob())
     private val json = Json { ignoreUnknownKeys = true }
-    private val client = OkHttpClient.Builder()
-        .readTimeout(0, TimeUnit.MILLISECONDS)
-        .pingInterval(20, TimeUnit.SECONDS)
-        .build()
-
     private var webSocket: WebSocket? = null
     private var currentRoomId: String? = null
     private val peerId: String = UUID.randomUUID().toString()
@@ -63,7 +58,7 @@ class SignalingClient(
         val request = Request.Builder().url(url).build()
 
         Log.d("SignalingClient", "Connecting to URL: $url")
-        client.newWebSocket(request, SignalingWebSocketListener())
+        httpClient.newWebSocket(request, SignalingWebSocketListener())
     }
 
     private inner class SignalingWebSocketListener : WebSocketListener() {

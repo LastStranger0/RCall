@@ -1,6 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <network-security-config>
-    <domain-config cleartextTrafficPermitted="true">
+    <domain-config>
         <domain includeSubdomains="true">165.232.68.160</domain>
+        <trust-anchors>
+            <certificates src="@raw/mycert"/>
+            <certificates src="system"/>
+        </trust-anchors>
     </domain-config>
+
+    <domain-config>
+        <domain includeSubdomains="true">192.168.1.122</domain>
+        <trust-anchors>
+            <certificates src="@raw/mycert"/>
+            <certificates src="system"/>
+        </trust-anchors>
+    </domain-config>
+
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="@raw/mycert"/>
+        </trust-anchors>
+    </debug-overrides>
 </network-security-config>

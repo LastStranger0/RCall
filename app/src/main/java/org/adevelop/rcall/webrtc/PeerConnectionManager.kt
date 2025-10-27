@@ -50,10 +50,6 @@ class PeerConnectionManager(
 
     private val executor = Executors.newSingleThreadExecutor()
 
-    private fun <T> execute(block: () -> T): T {
-        return executor.submit(block).get()
-    }
-
     private fun execute(block: () -> Unit) {
         executor.execute(block)
     }
@@ -250,6 +246,10 @@ class PeerConnectionManager(
         }
     }
 
+    fun toggleVideo(enabled: Boolean) = execute {
+        localVideoTrack?.setEnabled(enabled)
+        Log.d("PeerConnectionManager", "Local video track set to enabled: $enabled")
+    }
 
     fun switchCamera() = execute {
         (videoCapturer as? CameraVideoCapturer)?.switchCamera(null)
@@ -275,7 +275,20 @@ class PeerConnectionManager(
 
 
     private fun initLocalAudioTrack() {
-        audioSource = factory.createAudioSource(MediaConstraints())
+        val audioConstraints = MediaConstraints().apply {
+            mandatory.add(MediaConstraints.KeyValuePair("googAutoGainControl", "true"))
+            mandatory.add(MediaConstraints.KeyValuePair("googNoiseSuppression", "true"))
+            // Echo Cancellation - prevents the other person's voice from being played back to them.
+            mandatory.add(MediaConstraints.KeyValuePair("googEchoCancellation", "true"))
+            // High-pass Filter - removes low-frequency rumble.
+            mandatory.add(MediaConstraints.KeyValuePair("googHighpassFilter", "true"))
+        }
+
+        Log.d("PeerConnectionManager", "Creating audio source with constraints: $audioConstraints")
+
+        // Apply these constraints when creating the audio source.
+        audioSource = factory.createAudioSource(audioConstraints)
+
         localAudioTrack = factory.createAudioTrack("audio0", audioSource)
         pc?.addTrack(localAudioTrack)
     }

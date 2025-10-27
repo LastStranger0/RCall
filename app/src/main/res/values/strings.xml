@@ -4,4 +4,6 @@
     <string name="room_field">Enter room id</string>
     <string name="room_connect">Connect</string>
     <string name="room_field_error">Enter room id</string>
+
+    <string name="close">Close</string>
 </resources>
